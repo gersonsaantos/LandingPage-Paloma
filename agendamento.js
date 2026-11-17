@@ -103,8 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let bairroOutroInput =
         document.getElementById("bairroOutro");
 
-    // O HTML já possui <datalist id="listaBairros">.
-    const BAIRRO_DATALIST_ID = "listaBairros";
+    // Lista personalizada de bairros: fica posicionada logo abaixo do input.
+    const bairroSearch = bairroInput?.closest(".location-search");
+    const bairroSuggestions = document.getElementById("bairroSuggestions");
 
     let municipiosDisponiveis = [];
     let bairrosMunicipioAtual = [];
@@ -224,6 +225,144 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    function ocultarSugestoesBairro() {
+
+        if (bairroSuggestions) {
+            bairroSuggestions.replaceChildren();
+            bairroSuggestions.hidden = true;
+        }
+
+        if (bairroInput) {
+            bairroInput.setAttribute("aria-expanded", "false");
+        }
+
+        if (bairroSearch) {
+            bairroSearch.classList.remove("is-open");
+        }
+
+    }
+
+
+    function selecionarSugestaoBairro(nome) {
+
+        if (!bairroInput) return;
+
+        bairroInput.value = nome;
+        bairroInput.setCustomValidity("");
+
+        ocultarSugestoesBairro();
+
+        bairroInput.dispatchEvent(
+            new Event("change", { bubbles: true })
+        );
+
+    }
+
+
+    function atualizarSugestoesBairro() {
+
+        if (
+            !bairroInput ||
+            !bairroSuggestions ||
+            bairroInput.disabled ||
+            municipioEhOutros(municipioSelect?.value)
+        ) {
+            ocultarSugestoesBairro();
+            return;
+        }
+
+        const termo = bairroInput.value.trim();
+
+        // Campo vazio: não exibe nenhuma opção.
+        if (!termo) {
+            ocultarSugestoesBairro();
+            return;
+        }
+
+        const termoNormalizado = normalizarTexto(termo);
+
+        // Busca por início do nome, respeitando o município já selecionado.
+        const nomes = [...new Set(
+            bairrosMunicipioAtual
+                .map(item => String(item.bairro || "").trim())
+                .filter(Boolean)
+        )]
+            .filter(nome =>
+                normalizarTexto(nome).startsWith(termoNormalizado)
+            )
+            .sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+        // Sem correspondências: mantém a lista fechada, sem mensagem extra.
+        if (!nomes.length) {
+            ocultarSugestoesBairro();
+            return;
+        }
+
+        const fragmento = document.createDocumentFragment();
+
+        // Limita a lista inicial; a cliente pode digitar mais letras para refinar.
+        nomes.slice(0, 10).forEach((nome, indice) => {
+
+            const opcao = document.createElement("button");
+            opcao.type = "button";
+            opcao.className = "location-option";
+            opcao.textContent = nome;
+            opcao.setAttribute("role", "option");
+            opcao.setAttribute("aria-selected", "false");
+            opcao.id = `bairroSuggestion${indice}`;
+
+            opcao.addEventListener("pointerdown", evento => {
+                // Impede que o input perca o foco antes do clique no celular.
+                evento.preventDefault();
+            });
+
+            opcao.addEventListener("mousedown", evento => {
+                evento.preventDefault();
+            });
+
+            opcao.addEventListener("click", () => {
+                selecionarSugestaoBairro(nome);
+            });
+
+            opcao.addEventListener("keydown", evento => {
+
+                const botoes = [...bairroSuggestions.querySelectorAll(".location-option")];
+                const indiceAtual = botoes.indexOf(opcao);
+
+                if (evento.key === "ArrowDown") {
+                    evento.preventDefault();
+                    botoes[Math.min(indiceAtual + 1, botoes.length - 1)]?.focus();
+                } else if (evento.key === "ArrowUp") {
+                    evento.preventDefault();
+
+                    if (indiceAtual <= 0) {
+                        bairroInput.focus();
+                    } else {
+                        botoes[indiceAtual - 1]?.focus();
+                    }
+                } else if (evento.key === "Escape") {
+                    evento.preventDefault();
+                    ocultarSugestoesBairro();
+                    bairroInput.focus();
+                }
+
+            });
+
+            fragmento.appendChild(opcao);
+
+        });
+
+        bairroSuggestions.replaceChildren(fragmento);
+        bairroSuggestions.hidden = false;
+        bairroInput.setAttribute("aria-expanded", "true");
+
+        if (bairroSearch) {
+            bairroSearch.classList.add("is-open");
+        }
+
+    }
+
+
     function municipioEhOutros(valor) {
 
         const normalizado = normalizarTexto(valor);
@@ -275,7 +414,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!status) return;
 
-        status.textContent = mensagem;
+        status.textContent = mensagem || "";
+        status.hidden = !mensagem;
         status.style.color = erro ? "#a32632" : "#75635e";
 
     }
@@ -651,9 +791,11 @@ document.addEventListener("DOMContentLoaded", function () {
             bairroInput.disabled = true;
             bairroInput.placeholder = mensagem;
 
-            const datalist = document.getElementById(BAIRRO_DATALIST_ID);
+            bairroInput.removeAttribute("list");
+            ocultarSugestoesBairro();
 
-            if (datalist) datalist.replaceChildren();
+            const datalistAntigo = document.getElementById("listaBairros");
+            if (datalistAntigo) datalistAntigo.remove();
 
         }
 
@@ -697,30 +839,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } else {
 
-            let datalist = document.getElementById(BAIRRO_DATALIST_ID);
+            // Remove qualquer vínculo residual com datalist nativo do navegador.
+            bairroInput.removeAttribute("list");
 
-            if (!datalist) {
-                datalist = document.createElement("datalist");
-                datalist.id = BAIRRO_DATALIST_ID;
-                document.body.appendChild(datalist);
-            }
+            const datalistAntigo = document.getElementById("listaBairros");
+            if (datalistAntigo) datalistAntigo.remove();
 
-            bairroInput.setAttribute("list", BAIRRO_DATALIST_ID);
             bairroInput.disabled = nomes.length === 0;
             bairroInput.required = true;
+            bairroInput.autocomplete = "new-password";
             bairroInput.placeholder = nomes.length
-                ? "Digite ou selecione o bairro"
+                ? "Digite o nome do bairro"
                 : "Nenhum bairro cadastrado";
-
-            datalist.replaceChildren();
-
-            nomes.forEach(nome => {
-
-                const option = document.createElement("option");
-                option.value = nome;
-                datalist.appendChild(option);
-
-            });
 
             if (nomes.includes(valorAnterior)) {
                 bairroInput.value = valorAnterior;
@@ -728,13 +858,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 bairroInput.value = "";
             }
 
+            ocultarSugestoesBairro();
+
         }
 
-        mostrarStatusLocalidades(
-            nomes.length
-                ? `${nomes.length} bairro(s) disponível(is) em ${municipio}. Digite para filtrar.`
-                : `Nenhum bairro ativo foi encontrado para ${municipio}.`
-        );
+        // Não exibe contagem ou lista completa. As opções só aparecem durante a digitação.
+        mostrarStatusLocalidades("");
 
     }
 
@@ -795,9 +924,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (limparSelecao) bairroInput.value = "";
 
-                const datalist = document.getElementById(BAIRRO_DATALIST_ID);
+                bairroInput.removeAttribute("list");
+                ocultarSugestoesBairro();
 
-                if (datalist) datalist.replaceChildren();
+                const datalistAntigo = document.getElementById("listaBairros");
+                if (datalistAntigo) datalistAntigo.remove();
 
             }
 
@@ -1050,15 +1181,75 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (bairroInput) {
 
+        bairroInput.setAttribute("aria-controls", "bairroSuggestions");
+        bairroInput.setAttribute("aria-autocomplete", "list");
+        bairroInput.setAttribute("aria-expanded", "false");
+        bairroInput.autocomplete = "new-password";
+
         bairroInput.addEventListener("input", function () {
 
             this.setCustomValidity("");
+            atualizarSugestoesBairro();
 
         });
 
         bairroInput.addEventListener("change", function () {
 
             this.setCustomValidity("");
+            ocultarSugestoesBairro();
+
+        });
+
+        bairroInput.addEventListener("focus", function () {
+
+            if (this.value.trim()) {
+                atualizarSugestoesBairro();
+            }
+
+        });
+
+        bairroInput.addEventListener("keydown", function (evento) {
+
+            const opcoes = bairroSuggestions
+                ? [...bairroSuggestions.querySelectorAll(".location-option")]
+                : [];
+
+            if (evento.key === "ArrowDown" && opcoes.length) {
+                evento.preventDefault();
+                opcoes[0].focus();
+            } else if (
+                evento.key === "Enter" &&
+                !bairroSuggestions?.hidden &&
+                opcoes.length
+            ) {
+                // Enter escolhe a primeira correspondência visível.
+                evento.preventDefault();
+                selecionarSugestaoBairro(opcoes[0].textContent);
+            } else if (evento.key === "Escape") {
+                ocultarSugestoesBairro();
+            }
+
+        });
+
+        bairroInput.addEventListener("blur", function () {
+
+            // Pequeno atraso permite selecionar uma opção com toque/clique.
+            window.setTimeout(() => {
+                if (!bairroSearch?.contains(document.activeElement)) {
+                    ocultarSugestoesBairro();
+                }
+            }, 120);
+
+        });
+
+        document.addEventListener("pointerdown", function (evento) {
+
+            if (
+                bairroSearch &&
+                !bairroSearch.contains(evento.target)
+            ) {
+                ocultarSugestoesBairro();
+            }
 
         });
 

@@ -1367,3 +1367,40 @@ a {
     }
 
 }
+
+
+/* AJUSTE DO AUTOCOMPLETE PERSONALIZADO DE BAIRROS */
+.location-search {
+    position: relative;
+    z-index: 1;
+}
+
+.location-search.is-open {
+    z-index: 100;
+}
+
+.location-options {
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.location-option {
+    display: block;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.location-option + .location-option {
+    margin-top: 2px;
+}
+
+@media (max-width: 599px) {
+    .location-options {
+        top: calc(100% + 6px);
+        max-height: 210px;
+    }
+}
+

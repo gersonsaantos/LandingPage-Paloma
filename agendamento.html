@@ -1,1023 +1,695 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="Agende seu atendimento na Paloma Lima Beauty.">
+    <meta
+      name="description"
+      content="Agende seu atendimento na Paloma Lima Beauty."
+    />
 
     <title>Agendamento | Paloma Lima Beauty</title>
 
-    <link rel="stylesheet" href="agendamento.css">
+    <link rel="stylesheet" href="agendamento.css" />
     <script src="agendamento.js" defer></script>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- CABEÇALHO -->
 
     <header class="booking-header">
+      <a href="index.html" class="back-button" aria-label="Voltar"> &#8592; </a>
 
-        <a href="index.html" class="back-button" aria-label="Voltar">
-            &#8592;
-        </a>
-
-        <div class="booking-logo">
-            <h1>Paloma Lima</h1>
-            <span>BEAUTY</span>
-        </div>
-
+      <div class="booking-logo">
+        <h1>Paloma Lima</h1>
+        <span>BEAUTY</span>
+      </div>
     </header>
 
-
     <main class="booking-container">
+      <!-- PROGRESSO -->
 
-        <!-- PROGRESSO -->
-
-        <div class="progress-container">
-
-            <div class="progress-info">
-                <span id="stepCounter">Etapa 1 de 2</span>
-                <span id="progressPercent">10%</span>
-            </div>
-
-            <div
-                class="progress-bar"
-                role="progressbar"
-                aria-label="Progresso do agendamento"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-valuenow="10"
-            >
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-
+      <div class="progress-container">
+        <div class="progress-info">
+          <span id="stepCounter">Etapa 1 de 2</span>
+          <span id="progressPercent">10%</span>
         </div>
 
+        <div
+          class="progress-bar"
+          role="progressbar"
+          aria-label="Progresso do agendamento"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="10"
+        >
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
 
-        <!-- FORMULÁRIO -->
+      <!-- FORMULÁRIO -->
 
-        <form id="bookingForm" autocomplete="on" novalidate>
-
-
-            <!-- =====================================
+      <form id="bookingForm" autocomplete="on" novalidate>
+        <!-- =====================================
                  ETAPA 1: DADOS GERAIS
             ====================================== -->
 
-            <section class="form-step active" id="stepDados">
-
-                <div class="step-heading">
-
-                    <span class="step-subtitle">PALOMA LIMA BEAUTY</span>
-
-                    <h2>Vamos agendar?</h2>
-
-                    <p>
-                        Preencha as informações gerais para iniciar
-                        sua solicitação.
-                    </p>
-
-                </div>
-
-
-                <!-- NOME DO RESPONSÁVEL -->
-
-                <div class="form-group">
-
-                    <label for="nomeResponsavel">
-                        Nome de quem está solicitando <span>*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nomeResponsavel"
-                        name="nomeResponsavel"
-                        placeholder="Digite seu nome completo"
-                        autocomplete="name"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- TELEFONE -->
-
-                <div class="form-group">
-
-                    <label for="telefone">
-                        Telefone para contato <span>*</span>
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="telefone"
-                        name="telefone"
-                        placeholder="(00) 00000-0000"
-                        autocomplete="tel"
-                        inputmode="numeric"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- MUNICÍPIO -->
-
-                <div class="form-group">
-
-                    <label for="municipio">
-                        Município do atendimento <span>*</span>
-                    </label>
-
-                    <select
-                        id="municipio"
-                        name="municipio"
-                        data-api-field="municipios"
-                        class="form-select"
-                        required
-                    >
-
-                        <option value="">
-                            Selecione o município
-                        </option>
-
-                        <option value="São Luís">
-                            São Luís
-                        </option>
-
-                        <option value="Raposa">
-                            Raposa
-                        </option>
-
-                        <option value="Paço do Lumiar">
-                            Paço do Lumiar
-                        </option>
-
-                        <option value="São José de Ribamar">
-                            São José de Ribamar
-                        </option>
-
-                        <option value="__outros__">
-                            Outros municípios
-                        </option>
-
-                    </select>
-
-                    <small>
-                        Selecione o município onde será realizado
-                        o atendimento.
-                    </small>
-
-                </div>
-
-
-                <!-- OUTROS MUNICÍPIOS -->
-
-                <div
-                    class="form-group"
-                    id="outroMunicipioGroup"
-                    hidden
-                >
-
-                    <label for="outroMunicipio">
-                        Informe o município <span>*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="outroMunicipio"
-                        name="outroMunicipio"
-                        placeholder="Digite o nome do município"
-                        disabled
-                    >
-
-                </div>
-
-
-                <!-- BAIRRO -->
-
-                <div class="form-group">
-
-                    <label for="bairro">
-                        Bairro do atendimento <span>*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="bairro"
-                        name="bairro"
-                        list="listaBairros"
-                        placeholder="Selecione primeiro o município"
-                        autocomplete="off"
-                        data-api-field="bairros"
-                        disabled
-                        required
-                    >
-
-                    <datalist id="listaBairros">
-                        <!--
-                            Os bairros serão carregados
-                            posteriormente pela API da planilha.
-                        -->
-                    </datalist>
-
-                    <small id="bairroHelp">
-                        Primeiro escolha o município para consultar
-                        os bairros disponíveis.
-                    </small>
-
-                </div>
-
-
-                <!-- DATA -->
-
-                <div class="form-group">
-
-                    <label for="data">
-                        Data desejada <span>*</span>
-                    </label>
-
-                    <input
-                        type="date"
-                        id="data"
-                        name="data"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- HORÁRIO -->
-
-                <div class="form-group">
-
-                    <label for="horario">
-                        Horário desejado <span>*</span>
-                    </label>
-
-                    <input
-                        type="time"
-                        id="horario"
-                        name="horario"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- LOCALIZAÇÃO -->
-
-                <div class="form-group">
-
-                    <label for="localizacao">
-                        Link da localização do atendimento <span>*</span>
-                    </label>
-
-                    <input
-                        type="url"
-                        id="localizacao"
-                        name="localizacao"
-                        placeholder="Cole o link do Google Maps"
-                        required
-                    >
-
-                    <small>
-                        Compartilhe a localização onde será realizado
-                        o atendimento.
-                    </small>
-
-                </div>
-
-
-                <!-- QUANTIDADE DE PESSOAS -->
-
-                <div class="form-group quantity-group">
-
-                    <label>
-                        Para quantas pessoas será o agendamento?
-                        <span>*</span>
-                    </label>
-
-                    <p class="field-description">
-                        Selecione a quantidade de pessoas.
-                    </p>
-
-                    <div class="quantity-options">
-
-                        <label class="quantity-card">
-                            <input
-                                type="radio"
-                                name="quantidadePessoas"
-                                value="1"
-                            >
-                            <span>1</span>
-                        </label>
-
-                        <label class="quantity-card">
-                            <input
-                                type="radio"
-                                name="quantidadePessoas"
-                                value="2"
-                            >
-                            <span>2</span>
-                        </label>
-
-                        <label class="quantity-card">
-                            <input
-                                type="radio"
-                                name="quantidadePessoas"
-                                value="3"
-                            >
-                            <span>3</span>
-                        </label>
-
-                        <label class="quantity-card">
-                            <input
-                                type="radio"
-                                name="quantidadePessoas"
-                                value="4"
-                            >
-                            <span>4</span>
-                        </label>
-
-                        <label class="quantity-card">
-                            <input
-                                type="radio"
-                                name="quantidadePessoas"
-                                value="5"
-                            >
-                            <span>5</span>
-                        </label>
-
-                        <label class="quantity-card">
-                            <input
-                                type="radio"
-                                name="quantidadePessoas"
-                                value="mais"
-                            >
-                            <span>5+</span>
-                        </label>
-
-                    </div>
-
-
-                    <!-- QUANTIDADE PERSONALIZADA -->
-
-                    <div
-                        class="custom-quantity"
-                        id="customQuantity"
-                        hidden
-                    >
-
-                        <label for="quantidadeExata">
-                            Informe a quantidade de pessoas <span>*</span>
-                        </label>
-
-                        <input
-                            type="number"
-                            id="quantidadeExata"
-                            name="quantidadeExata"
-                            min="6"
-                            step="1"
-                            placeholder="Exemplo: 8"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <!-- CONTINUAR -->
-
-                <div class="step-actions">
-
-                    <button
-                        type="button"
-                        class="btn-next"
-                        data-action="next"
-                    >
-                        Continuar <span>&#8594;</span>
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- =====================================
+        <section class="form-step active" id="stepDados">
+          <div class="step-heading">
+            <span class="step-subtitle">PALOMA LIMA BEAUTY</span>
+
+            <h2>Vamos agendar?</h2>
+
+            <p>Preencha as informações gerais para iniciar sua solicitação.</p>
+          </div>
+
+          <!-- NOME DO RESPONSÁVEL -->
+
+          <div class="form-group">
+            <label for="nomeResponsavel">
+              Nome de quem está solicitando <span>*</span>
+            </label>
+
+            <input
+              type="text"
+              id="nomeResponsavel"
+              name="nomeResponsavel"
+              placeholder="Digite seu nome completo"
+              autocomplete="name"
+              required
+            />
+          </div>
+
+          <!-- TELEFONE -->
+
+          <div class="form-group">
+            <label for="telefone"> Telefone para contato <span>*</span> </label>
+
+            <input
+              type="tel"
+              id="telefone"
+              name="telefone"
+              placeholder="(00) 00000-0000"
+              autocomplete="tel"
+              inputmode="numeric"
+              required
+            />
+          </div>
+
+          <!-- MUNICÍPIO -->
+
+          <div class="form-group">
+            <label for="municipio">
+              Município do atendimento <span>*</span>
+            </label>
+
+            <select
+              id="municipio"
+              name="municipio"
+              data-api-field="municipios"
+              class="form-select"
+              required
+            >
+              <option value="">Selecione o município</option>
+
+              <option value="São Luís">São Luís</option>
+
+              <option value="Raposa">Raposa</option>
+
+              <option value="Paço do Lumiar">Paço do Lumiar</option>
+
+              <option value="São José de Ribamar">São José de Ribamar</option>
+
+              <option value="__outros__">Outros municípios</option>
+            </select>
+
+            <small>
+              Selecione o município onde será realizado o atendimento.
+            </small>
+          </div>
+
+          <!-- OUTROS MUNICÍPIOS -->
+
+          <div class="form-group" id="outroMunicipioGroup" hidden>
+            <label for="outroMunicipio">
+              Informe o município <span>*</span>
+            </label>
+
+            <input
+              type="text"
+              id="outroMunicipio"
+              name="outroMunicipio"
+              placeholder="Digite o nome do município"
+              disabled
+            />
+          </div>
+
+          <!-- BAIRRO -->
+
+          <div class="form-group">
+            <label for="bairro"> Bairro do atendimento <span>*</span> </label>
+
+            <div class="location-search" id="bairroSearch">
+              <input
+                type="text"
+                id="bairro"
+                name="bairro"
+                placeholder="Selecione primeiro o município"
+                autocomplete="new-password"
+                autocapitalize="words"
+                spellcheck="false"
+                data-form-type="other"
+                data-api-field="bairros"
+                aria-autocomplete="list"
+                aria-controls="bairroSuggestions"
+                aria-expanded="false"
+                disabled
+                required
+              />
+
+              <div
+                id="bairroSuggestions"
+                class="location-options"
+                role="listbox"
+                aria-label="Sugestões de bairros"
+                hidden
+              ></div>
+            </div>
+
+            <small id="bairroHelp">
+              Digite o nome do bairro para filtrar as opções.
+            </small>
+          </div>
+
+          <!-- DATA -->
+
+          <div class="form-group">
+            <label for="data"> Data desejada <span>*</span> </label>
+
+            <input type="date" id="data" name="data" required />
+          </div>
+
+          <!-- HORÁRIO -->
+
+          <div class="form-group">
+            <label for="horario"> Horário desejado <span>*</span> </label>
+
+            <input type="time" id="horario" name="horario" required />
+          </div>
+
+          <!-- LOCALIZAÇÃO -->
+
+          <div class="form-group">
+            <label for="localizacao">
+              Link da localização do atendimento <span>*</span>
+            </label>
+
+            <input
+              type="url"
+              id="localizacao"
+              name="localizacao"
+              placeholder="Cole o link do Google Maps"
+              required
+            />
+
+            <small>
+              Compartilhe a localização onde será realizado o atendimento.
+            </small>
+          </div>
+
+          <!-- QUANTIDADE DE PESSOAS -->
+
+          <div class="form-group quantity-group">
+            <label>
+              Para quantas pessoas será o agendamento?
+              <span>*</span>
+            </label>
+
+            <p class="field-description">Selecione a quantidade de pessoas.</p>
+
+            <div class="quantity-options">
+              <label class="quantity-card">
+                <input type="radio" name="quantidadePessoas" value="1" />
+                <span>1</span>
+              </label>
+
+              <label class="quantity-card">
+                <input type="radio" name="quantidadePessoas" value="2" />
+                <span>2</span>
+              </label>
+
+              <label class="quantity-card">
+                <input type="radio" name="quantidadePessoas" value="3" />
+                <span>3</span>
+              </label>
+
+              <label class="quantity-card">
+                <input type="radio" name="quantidadePessoas" value="4" />
+                <span>4</span>
+              </label>
+
+              <label class="quantity-card">
+                <input type="radio" name="quantidadePessoas" value="5" />
+                <span>5</span>
+              </label>
+
+              <label class="quantity-card">
+                <input type="radio" name="quantidadePessoas" value="mais" />
+                <span>5+</span>
+              </label>
+            </div>
+
+            <!-- QUANTIDADE PERSONALIZADA -->
+
+            <div class="custom-quantity" id="customQuantity" hidden>
+              <label for="quantidadeExata">
+                Informe a quantidade de pessoas <span>*</span>
+              </label>
+
+              <input
+                type="number"
+                id="quantidadeExata"
+                name="quantidadeExata"
+                min="6"
+                step="1"
+                placeholder="Exemplo: 8"
+              />
+            </div>
+          </div>
+
+          <!-- CONTINUAR -->
+
+          <div class="step-actions">
+            <button type="button" class="btn-next" data-action="next">
+              Continuar <span>&#8594;</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- =====================================
                  ETAPA 2: CLIENTES
             ====================================== -->
 
-            <section
-                class="form-step"
-                id="stepPessoas"
-                hidden
+        <section class="form-step" id="stepPessoas" hidden>
+          <div class="step-heading">
+            <span class="step-subtitle"> DADOS INDIVIDUAIS </span>
+
+            <h2>Informações das clientes</h2>
+
+            <p>
+              Preencha os dados e escolha os serviços de cada pessoa
+              individualmente.
+            </p>
+          </div>
+
+          <!-- ABAS DAS PESSOAS -->
+
+          <div
+            class="people-tabs"
+            id="peopleTabs"
+            role="tablist"
+            aria-label="Clientes do agendamento"
+          ></div>
+
+          <!-- FORMULÁRIOS INDIVIDUAIS -->
+
+          <div class="people-forms" id="peopleForms"></div>
+
+          <!-- NAVEGAÇÃO ENTRE PESSOAS -->
+
+          <div class="person-navigation" id="personNavigation" hidden>
+            <button
+              type="button"
+              class="btn-back"
+              data-action="previous-person"
             >
+              &#8592; Anterior
+            </button>
 
-                <div class="step-heading">
+            <span id="personCounter"> Pessoa 1 de 1 </span>
 
-                    <span class="step-subtitle">
-                        DADOS INDIVIDUAIS
-                    </span>
+            <button type="button" class="btn-next" data-action="next-person">
+              Próxima &#8594;
+            </button>
+          </div>
 
-                    <h2>Informações das clientes</h2>
+          <!-- AÇÕES DA ETAPA -->
 
-                    <p>
-                        Preencha os dados e escolha os serviços de cada
-                        pessoa individualmente.
-                    </p>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-action="back">
+              Voltar
+            </button>
 
-                </div>
+            <button type="submit" class="btn-finish">
+              Finalizar agendamento
+              <span>&#10003;</span>
+            </button>
+          </div>
+        </section>
 
-
-                <!-- ABAS DAS PESSOAS -->
-
-                <div
-                    class="people-tabs"
-                    id="peopleTabs"
-                    role="tablist"
-                    aria-label="Clientes do agendamento"
-                ></div>
-
-
-                <!-- FORMULÁRIOS INDIVIDUAIS -->
-
-                <div
-                    class="people-forms"
-                    id="peopleForms"
-                ></div>
-
-
-                <!-- NAVEGAÇÃO ENTRE PESSOAS -->
-
-                <div
-                    class="person-navigation"
-                    id="personNavigation"
-                    hidden
-                >
-
-                    <button
-                        type="button"
-                        class="btn-back"
-                        data-action="previous-person"
-                    >
-                        &#8592; Anterior
-                    </button>
-
-                    <span id="personCounter">
-                        Pessoa 1 de 1
-                    </span>
-
-                    <button
-                        type="button"
-                        class="btn-next"
-                        data-action="next-person"
-                    >
-                        Próxima &#8594;
-                    </button>
-
-                </div>
-
-
-                <!-- AÇÕES DA ETAPA -->
-
-                <div class="step-actions">
-
-                    <button
-                        type="button"
-                        class="btn-back"
-                        data-action="back"
-                    >
-                        Voltar
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="btn-finish"
-                    >
-                        Finalizar agendamento
-                        <span>&#10003;</span>
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- =====================================
+        <!-- =====================================
                  MODELO INDIVIDUAL DE CADA CLIENTE
             ====================================== -->
 
-            <template id="personTemplate">
-
-                <article class="person-card">
-
-                    <div class="person-heading">
-
-                        <span class="person-number">
-                            CLIENTE 1
-                        </span>
-
-                        <h3 class="person-title">
-                            Pessoa 1
-                        </h3>
-
-                    </div>
-
-
-                    <!-- NOME DA CLIENTE -->
-
-                    <div class="form-group">
-
-                        <label>
-                            Nome completo da cliente <span>*</span>
-                        </label>
-
-                        <input
-                            type="text"
-                            data-field="nome"
-                            placeholder="Digite o nome completo"
-                        >
-
-                    </div>
-
-
-                    <!-- SERVIÇOS -->
-
-                    <div class="form-group">
-
-                        <label>
-                            Qual serviço deseja realizar? <span>*</span>
-                        </label>
-
-                        <p class="field-description">
-                            Cada pessoa pode escolher um serviço diferente.
-                        </p>
-
-                        <div class="service-options">
-
-                            <label class="option-card">
-
-                                <input
-                                    type="radio"
-                                    data-group="servico"
-                                    value="Maquiagem"
-                                >
-
-                                <span class="option-content">
-                                    <span class="option-icon">
-                                        &#10024;
-                                    </span>
-                                    <span>Maquiagem</span>
-                                </span>
-
-                            </label>
-
-
-                            <label class="option-card">
-
-                                <input
-                                    type="radio"
-                                    data-group="servico"
-                                    value="Babyliss"
-                                >
-
-                                <span class="option-content">
-                                    <span class="option-icon">
-                                        &#8767;
-                                    </span>
-                                    <span>Babyliss</span>
-                                </span>
-
-                            </label>
-
-
-                            <label class="option-card">
-
-                                <input
-                                    type="radio"
-                                    data-group="servico"
-                                    value="Penteado"
-                                >
-
-                                <span class="option-content">
-                                    <span class="option-icon">
-                                        &#10047;
-                                    </span>
-                                    <span>Penteado</span>
-                                </span>
-
-                            </label>
-
-
-                            <label class="option-card">
-
-                                <input
-                                    type="radio"
-                                    data-group="servico"
-                                    value="Maquiagem + Babyliss"
-                                >
-
-                                <span class="option-content">
-                                    <span class="option-icon">
-                                        &#10024;
-                                    </span>
-                                    <span>Maquiagem + Babyliss</span>
-                                </span>
-
-                            </label>
-
-
-                            <label class="option-card">
-
-                                <input
-                                    type="radio"
-                                    data-group="servico"
-                                    value="Maquiagem + Penteado"
-                                >
-
-                                <span class="option-content">
-                                    <span class="option-icon">
-                                        &#10047;
-                                    </span>
-                                    <span>Maquiagem + Penteado</span>
-                                </span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- BABYLISS -->
-
-                    <div
-                        class="conditional-section"
-                        data-panel="babyliss"
-                        hidden
-                    >
-
-                        <div class="form-group">
-
-                            <label>
-                                Qual tipo de Babyliss deseja? <span>*</span>
-                            </label>
-
-                            <div class="choice-options">
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tipoBabyliss"
-                                        value="Babyliss liso"
-                                    >
-
-                                    <span>Babyliss liso</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tipoBabyliss"
-                                        value="Babyliss cacheado"
-                                    >
-
-                                    <span>Babyliss cacheado</span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- PENTEADO -->
-
-                    <div
-                        class="conditional-section"
-                        data-panel="penteado"
-                        hidden
-                    >
-
-                        <div class="form-group">
-
-                            <label>
-                                Escolha o tipo de penteado <span>*</span>
-                            </label>
-
-                            <div class="choice-options">
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tipoPenteado"
-                                        value="Coque liso"
-                                    >
-
-                                    <span>Coque liso</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tipoPenteado"
-                                        value="Coque cacheado"
-                                    >
-
-                                    <span>Coque cacheado</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tipoPenteado"
-                                        value="Semipreso liso"
-                                    >
-
-                                    <span>Semipreso liso</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tipoPenteado"
-                                        value="Semipreso cacheado"
-                                    >
-
-                                    <span>Semipreso cacheado</span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- TAMANHO DO CABELO -->
-
-                    <div
-                        class="conditional-section"
-                        data-panel="tamanho"
-                        hidden
-                    >
-
-                        <div class="form-group">
-
-                            <label>
-                                Qual o tamanho do cabelo? <span>*</span>
-                            </label>
-
-                            <div class="choice-options">
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tamanhoCabelo"
-                                        value="Pequeno"
-                                    >
-
-                                    <span>Pequeno</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tamanhoCabelo"
-                                        value="Médio"
-                                    >
-
-                                    <span>Médio</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="tamanhoCabelo"
-                                        value="Grande"
-                                    >
-
-                                    <span>Grande</span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- AUTORIZAÇÃO DE IMAGEM -->
-
-                    <div
-                        class="conditional-section"
-                        data-panel="imagem"
-                        hidden
-                    >
-
-                        <div class="image-authorization">
-
-                            <h3>Direito de uso de imagem</h3>
-
-                            <p>
-                                Você autoriza o uso das imagens do seu
-                                atendimento para divulgação dos trabalhos
-                                da Paloma Lima Beauty?
-                            </p>
-
-                            <div class="choice-options">
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="autorizacaoImagem"
-                                        value="Sim"
-                                    >
-
-                                    <span>Sim, autorizo</span>
-
-                                </label>
-
-
-                                <label class="choice-card">
-
-                                    <input
-                                        type="radio"
-                                        data-group="autorizacaoImagem"
-                                        value="Não"
-                                    >
-
-                                    <span>Não autorizo</span>
-
-                                </label>
-
-                            </div>
-
-                            <small class="privacy-note">
-                                A autorização é opcional e não interfere
-                                na realização do atendimento.
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-            </template>
-
-
-            <!-- =====================================
+        <template id="personTemplate">
+          <article class="person-card">
+            <div class="person-heading">
+              <span class="person-number"> CLIENTE 1 </span>
+
+              <h3 class="person-title">Pessoa 1</h3>
+            </div>
+
+            <!-- NOME DA CLIENTE -->
+
+            <div class="form-group">
+              <label> Nome completo da cliente <span>*</span> </label>
+
+              <input
+                type="text"
+                data-field="nome"
+                placeholder="Digite o nome completo"
+              />
+            </div>
+
+            <!-- SERVIÇOS -->
+
+            <div class="form-group">
+              <label> Qual serviço deseja realizar? <span>*</span> </label>
+
+              <p class="field-description">
+                Cada pessoa pode escolher um serviço diferente.
+              </p>
+
+              <div class="service-options">
+                <label class="option-card">
+                  <input type="radio" data-group="servico" value="Maquiagem" />
+
+                  <span class="option-content">
+                    <span class="option-icon"> &#10024; </span>
+                    <span>Maquiagem</span>
+                  </span>
+                </label>
+
+                <label class="option-card">
+                  <input type="radio" data-group="servico" value="Babyliss" />
+
+                  <span class="option-content">
+                    <span class="option-icon"> &#8767; </span>
+                    <span>Babyliss</span>
+                  </span>
+                </label>
+
+                <label class="option-card">
+                  <input type="radio" data-group="servico" value="Penteado" />
+
+                  <span class="option-content">
+                    <span class="option-icon"> &#10047; </span>
+                    <span>Penteado</span>
+                  </span>
+                </label>
+
+                <label class="option-card">
+                  <input
+                    type="radio"
+                    data-group="servico"
+                    value="Maquiagem + Babyliss"
+                  />
+
+                  <span class="option-content">
+                    <span class="option-icon"> &#10024; </span>
+                    <span>Maquiagem + Babyliss</span>
+                  </span>
+                </label>
+
+                <label class="option-card">
+                  <input
+                    type="radio"
+                    data-group="servico"
+                    value="Maquiagem + Penteado"
+                  />
+
+                  <span class="option-content">
+                    <span class="option-icon"> &#10047; </span>
+                    <span>Maquiagem + Penteado</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- BABYLISS -->
+
+            <div class="conditional-section" data-panel="babyliss" hidden>
+              <div class="form-group">
+                <label> Qual tipo de Babyliss deseja? <span>*</span> </label>
+
+                <div class="choice-options">
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tipoBabyliss"
+                      value="Babyliss liso"
+                    />
+
+                    <span>Babyliss liso</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tipoBabyliss"
+                      value="Babyliss cacheado"
+                    />
+
+                    <span>Babyliss cacheado</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- PENTEADO -->
+
+            <div class="conditional-section" data-panel="penteado" hidden>
+              <div class="form-group">
+                <label> Escolha o tipo de penteado <span>*</span> </label>
+
+                <div class="choice-options">
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tipoPenteado"
+                      value="Coque liso"
+                    />
+
+                    <span>Coque liso</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tipoPenteado"
+                      value="Coque cacheado"
+                    />
+
+                    <span>Coque cacheado</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tipoPenteado"
+                      value="Semipreso liso"
+                    />
+
+                    <span>Semipreso liso</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tipoPenteado"
+                      value="Semipreso cacheado"
+                    />
+
+                    <span>Semipreso cacheado</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAMANHO DO CABELO -->
+
+            <div class="conditional-section" data-panel="tamanho" hidden>
+              <div class="form-group">
+                <label> Qual o tamanho do cabelo? <span>*</span> </label>
+
+                <div class="choice-options">
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tamanhoCabelo"
+                      value="Pequeno"
+                    />
+
+                    <span>Pequeno</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tamanhoCabelo"
+                      value="Médio"
+                    />
+
+                    <span>Médio</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="tamanhoCabelo"
+                      value="Grande"
+                    />
+
+                    <span>Grande</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- AUTORIZAÇÃO DE IMAGEM -->
+
+            <div class="conditional-section" data-panel="imagem" hidden>
+              <div class="image-authorization">
+                <h3>Direito de uso de imagem</h3>
+
+                <p>
+                  Você autoriza o uso das imagens do seu atendimento para
+                  divulgação dos trabalhos da Paloma Lima Beauty?
+                </p>
+
+                <div class="choice-options">
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="autorizacaoImagem"
+                      value="Sim"
+                    />
+
+                    <span>Sim, autorizo</span>
+                  </label>
+
+                  <label class="choice-card">
+                    <input
+                      type="radio"
+                      data-group="autorizacaoImagem"
+                      value="Não"
+                    />
+
+                    <span>Não autorizo</span>
+                  </label>
+                </div>
+
+                <small class="privacy-note">
+                  A autorização é opcional e não interfere na realização do
+                  atendimento.
+                </small>
+              </div>
+            </div>
+          </article>
+        </template>
+
+        <!-- =====================================
                  ETAPA FINAL: SUCESSO
             ====================================== -->
 
-            <section
-                class="form-step success-step"
-                id="stepFinal"
-                hidden
-                aria-live="polite"
-            >
+        <section
+          class="form-step success-step"
+          id="stepFinal"
+          hidden
+          aria-live="polite"
+        >
+          <div class="success-icon">
+            <span>&#10003;</span>
+          </div>
 
-                <div class="success-icon">
-                    <span>&#10003;</span>
-                </div>
+          <span class="success-kicker"> PALOMA LIMA BEAUTY </span>
 
-                <span class="success-kicker">
-                    PALOMA LIMA BEAUTY
-                </span>
+          <h2 id="successTitle">Solicitação recebida!</h2>
 
-                <h2 id="successTitle">
-                    Solicitação recebida!
-                </h2>
+          <p class="success-message" id="successMessage">
+            Obrigada por escolher a Paloma Lima Beauty!
+          </p>
 
-                <p
-                    class="success-message"
-                    id="successMessage"
-                >
-                    Obrigada por escolher a Paloma Lima Beauty!
-                </p>
+          <!-- RESUMO -->
 
+          <div class="success-summary">
+            <h3>Resumo da solicitação</h3>
 
-                <!-- RESUMO -->
+            <div class="summary-row">
+              <span>Código</span>
+              <strong id="successBookingId">---</strong>
+            </div>
 
-                <div class="success-summary">
+            <div class="summary-row">
+              <span>Responsável</span>
+              <strong id="successResponsible">---</strong>
+            </div>
 
-                    <h3>Resumo da solicitação</h3>
+            <div class="summary-row">
+              <span>Quantidade de pessoas</span>
+              <strong id="successPeople">---</strong>
+            </div>
 
-                    <div class="summary-row">
-                        <span>Código</span>
-                        <strong id="successBookingId">---</strong>
-                    </div>
+            <div class="summary-row">
+              <span>Data desejada</span>
+              <strong id="successDate">---</strong>
+            </div>
 
-                    <div class="summary-row">
-                        <span>Responsável</span>
-                        <strong id="successResponsible">---</strong>
-                    </div>
+            <div class="summary-row">
+              <span>Horário desejado</span>
+              <strong id="successTime">---</strong>
+            </div>
 
-                    <div class="summary-row">
-                        <span>Quantidade de pessoas</span>
-                        <strong id="successPeople">---</strong>
-                    </div>
+            <div class="summary-row">
+              <span>Status</span>
 
-                    <div class="summary-row">
-                        <span>Data desejada</span>
-                        <strong id="successDate">---</strong>
-                    </div>
+              <strong id="successStatus" class="status-pill">
+                Aguardando confirmação
+              </strong>
+            </div>
+          </div>
 
-                    <div class="summary-row">
-                        <span>Horário desejado</span>
-                        <strong id="successTime">---</strong>
-                    </div>
+          <!-- CLIENTES -->
 
-                    <div class="summary-row">
-                        <span>Status</span>
+          <div class="success-clients">
+            <h3>Clientes incluídas</h3>
 
-                        <strong
-                            id="successStatus"
-                            class="status-pill"
-                        >
-                            Aguardando confirmação
-                        </strong>
-                    </div>
+            <ul id="successClients"></ul>
+          </div>
 
-                </div>
+          <!-- AVISO -->
 
+          <p class="success-notice" id="successNotice">
+            Nossa equipe entrará em contato para verificar a disponibilidade e
+            confirmar o atendimento.
+          </p>
 
-                <!-- CLIENTES -->
+          <!-- VOLTAR AO INÍCIO -->
 
-                <div class="success-clients">
-
-                    <h3>Clientes incluídas</h3>
-
-                    <ul id="successClients"></ul>
-
-                </div>
-
-
-                <!-- AVISO -->
-
-                <p
-                    class="success-notice"
-                    id="successNotice"
-                >
-                    Nossa equipe entrará em contato para verificar
-                    a disponibilidade e confirmar o atendimento.
-                </p>
-
-
-                <!-- VOLTAR AO INÍCIO -->
-
-                <a href="index.html" class="btn-home">
-                    Voltar ao início <span>&#8594;</span>
-                </a>
-
-            </section>
-
-        </form>
-
+          <a href="index.html" class="btn-home">
+            Voltar ao início <span>&#8594;</span>
+          </a>
+        </section>
+      </form>
     </main>
-
 
     <!-- RODAPÉ -->
 
     <footer class="booking-footer">
+      <p>Paloma Lima Beauty</p>
 
-        <p>Paloma Lima Beauty</p>
-
-        <span>
-            Beleza e cuidado em cada detalhe.
-        </span>
-
+      <span> Beleza e cuidado em cada detalhe. </span>
     </footer>
-
-</body>
+  </body>
 </html>
